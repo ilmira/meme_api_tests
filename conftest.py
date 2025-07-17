@@ -35,13 +35,11 @@ def put_endpoint():
 def delete_endpoint():
     return DeleteMeme()
 
-@pytest.fixture()
+@pytest.fixture(autouse=True)
 def authorization(authorize, authorize_token):
-    def _authorization(name):
-        if not authorize_token.check_token_is_alive():
-            authorize.get_token(name)
-            authorize.set_headers_with_token()
-    return _authorization
+    if not authorize_token.check_token_is_alive():
+        authorize.get_token("Ilmira")
+        authorize.set_headers_with_token()
 
 @pytest.fixture()
 def new_meme_id(post_endpoint, delete_endpoint):

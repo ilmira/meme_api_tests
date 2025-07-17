@@ -21,24 +21,43 @@ bodies = [{
     }
 ]
 
+@allure.title('Check authorization')
+@allure.feature('Authorization')
+@allure.story('Get token')
+@pytest.mark.critical
+def test_get_authorize_token(authorize):
+    authorize.check_status_code_is_200()
+    authorize.check_data(authorize.user, "user")
+    authorize.check_data(authorize.token, 'token')
+
+@allure.title('Check authorization')
+@allure.feature('Authorization')
+@allure.story('Check token')
+@pytest.mark.critical
+def test_check_authorize_token(authorize_token):
+    authorize_token.check_status_code_is_200()
+    authorize_token.check_token_is_alive()
+    authorize_token.check_data()
 
 @allure.title('Post new meme')
 @allure.feature('Add/update memes')
 @allure.story('Add meme')
 @pytest.mark.critical
 @pytest.mark.parametrize('body', bodies)
-def test_post_meme(post_endpoint, authorization, body):
-    authorization('Ilmira')
+def test_post_meme(post_endpoint, body):
     post_endpoint.post_meme(body)
     post_endpoint.check_status_code_is_200()
+    post_endpoint.check_data(body['text'], 'text')
     post_endpoint.check_data(body['url'], 'url')
+    post_endpoint.check_data(body['tags'], 'tags')
+    post_endpoint.check_data(body['info'], 'info')
+
 
 @allure.title('Get all memes')
 @allure.feature('Get memes')
 @allure.story('Get all memes')
 @pytest.mark.critical
-def test_get_all_memes(get_memes_endpoint, authorization):
-    authorization('Ilmira')
+def test_get_all_memes(get_memes_endpoint):
     get_memes_endpoint.get_memes()
     get_memes_endpoint.check_status_code_is_200()
 
@@ -46,8 +65,7 @@ def test_get_all_memes(get_memes_endpoint, authorization):
 @allure.feature('Get memes')
 @allure.story('Get meme by id')
 @pytest.mark.critical
-def test_get_meme_by_id(new_meme_id, get_meme_by_id_endpoint, authorization):
-    authorization('Ilmira')
+def test_get_meme_by_id(new_meme_id, get_meme_by_id_endpoint):
     get_meme_by_id_endpoint.get_meme_by_id(new_meme_id)
     get_meme_by_id_endpoint.check_status_code_is_200()
     get_meme_by_id_endpoint.check_data(new_meme_id, 'id')
@@ -56,7 +74,7 @@ def test_get_meme_by_id(new_meme_id, get_meme_by_id_endpoint, authorization):
 @allure.feature('Add/update memes')
 @allure.story('Update meme')
 @pytest.mark.medium
-def test_put_meme(new_meme_id, put_endpoint, authorization):
+def test_put_meme(new_meme_id, put_endpoint):
     body = {
         'id': new_meme_id,
         'text': 'no stress UPD',
@@ -64,16 +82,19 @@ def test_put_meme(new_meme_id, put_endpoint, authorization):
         'tags': ['cat', 'stress', 'vibe'],
         'info': {"colors": "white"}
     }
-    authorization('Ilmira')
     put_endpoint.update_meme_by_id(new_meme_id, body)
     put_endpoint.check_status_code_is_200()
     put_endpoint.check_data(body['text'], 'text')
+    put_endpoint.check_data(body['url'], 'url')
+    put_endpoint.check_data(body['tags'], 'tags')
+    put_endpoint.check_data(body['info'], 'info')
 
 
 @allure.title('Delete meme')
 @allure.feature('Delete memes')
 @allure.story('Delete meme')
-def test_delete_meme(new_meme_id, delete_endpoint, authorization):
-    authorization('Ilmira')
+def test_delete_meme(new_meme_id, delete_endpoint):
     delete_endpoint.delete_meme(new_meme_id)
     delete_endpoint.check_status_code_is_200()
+    delete_endpoint.check_data(new_meme_id)
+    delete_endpoint.check_that_meme_is_deleted(new_meme_id)

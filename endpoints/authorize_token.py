@@ -11,3 +11,7 @@ class AuthorizeToken(Endpoint):
             return True
         else:
             return False
+
+    @allure.step('Data is correct')
+    def check_data(self):
+        assert self.response.text

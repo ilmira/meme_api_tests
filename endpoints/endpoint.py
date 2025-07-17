@@ -5,11 +5,11 @@ class Endpoint:
     url = 'http://memesapi.course.qa-practice.com'
     response = None
     json = None
-    user = None
+    user = "Ilmira"
     token = None
     headers = None
 
-    @allure.step('Name, id and url is correct')
+    @allure.step('Data is correct')
     def check_data(self, data, data_name):
         assert 'id' in self.json
         assert self.json['id']
