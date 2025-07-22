@@ -16,3 +16,7 @@ class DeleteMeme(Endpoint):
     def check_that_meme_is_deleted(self, id):
         self.response = requests.get(f'{self.url}/meme/{id}', headers=self.headers)
         assert self.response.status_code == 404, f'Status code is not 404, its {self.response.status_code}'
+
+    @allure.step('Delete meme: not valid, unauthorised')
+    def delete_meme_unauthorised(self, id):
+        self.response = requests.delete(f'{self.url}/meme/{id}')

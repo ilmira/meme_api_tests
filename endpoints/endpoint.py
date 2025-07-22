@@ -20,6 +20,14 @@ class Endpoint:
     def check_status_code_is_200(self):
         assert self.response.status_code == 200, f'Status code is "{self.response.status_code}", not 200!'
 
+    @allure.step('Check status code is 401')
+    def check_status_code_is_401(self):
+        assert self.response.status_code == 401, f'Status code is "{self.response.status_code}", not 401!'
+
+    @allure.step('Check status code is 403')
+    def check_status_code_is_403(self):
+        assert self.response.status_code == 403, f'Status code is "{self.response.status_code}", not 403!'
+
     @allure.step('Check requirements fields')
     def check_requirements_fields(self, url):
         requirements = ['text', 'url', 'tags', 'info']

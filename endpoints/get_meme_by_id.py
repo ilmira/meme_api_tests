@@ -9,3 +9,8 @@ class GetMemeById(Endpoint):
         self.response = requests.get(f'{self.url}/meme/{id}', headers=self.headers)
         self.json = self.response.json()
         return self.response
+
+    @allure.step('Get meme by id: not valid, unauthorized user')
+    def get_meme_by_id_unauthorised(self, id):
+        self.response = requests.get(f'{self.url}/meme/{id}')
+        return self.response

@@ -22,3 +22,8 @@ class Authorize(Endpoint):
     @allure.step('Data is correct')
     def check_data(self, data, data_name):
         assert self.json[data_name] == data
+
+    @allure.step('Check token is good')
+    def check_token_is_good(self):
+        self.response = requests.get(f'{self.url}/meme', headers=self.headers)
+        assert self.response.status_code == 200, f'Status code is {self.response.status_code}, not 200! Token is not good!'

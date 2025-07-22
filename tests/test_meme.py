@@ -29,6 +29,7 @@ def test_get_authorize_token(authorize):
     authorize.check_status_code_is_200()
     authorize.check_data(authorize.user, "user")
     authorize.check_data(authorize.token, 'token')
+    authorize.check_token_is_good()
 
 @allure.title('Check authorization')
 @allure.feature('Authorization')
@@ -52,6 +53,9 @@ def test_post_meme(post_endpoint, body):
     post_endpoint.check_data(body['tags'], 'tags')
     post_endpoint.check_data(body['info'], 'info')
 
+    post_endpoint.post_meme_unauthorised(body)
+    post_endpoint.check_status_code_is_401()
+
 
 @allure.title('Get all memes')
 @allure.feature('Get memes')
@@ -61,6 +65,9 @@ def test_get_all_memes(get_memes_endpoint):
     get_memes_endpoint.get_memes()
     get_memes_endpoint.check_status_code_is_200()
 
+    get_memes_endpoint.get_memes_unauthorised()
+    get_memes_endpoint.check_status_code_is_401()
+
 @allure.title('Get all memes')
 @allure.feature('Get memes')
 @allure.story('Get meme by id')
@@ -69,6 +76,12 @@ def test_get_meme_by_id(new_meme_id, get_meme_by_id_endpoint):
     get_meme_by_id_endpoint.get_meme_by_id(new_meme_id)
     get_meme_by_id_endpoint.check_status_code_is_200()
     get_meme_by_id_endpoint.check_data(new_meme_id, 'id')
+
+    get_meme_by_id_endpoint.get_meme_by_id(1)
+    get_meme_by_id_endpoint.check_status_code_is_200()
+
+    get_meme_by_id_endpoint.get_meme_by_id_unauthorised(new_meme_id)
+    get_meme_by_id_endpoint.check_status_code_is_401()
 
 @allure.title('Update meme')
 @allure.feature('Add/update memes')
@@ -82,6 +95,9 @@ def test_put_meme(new_meme_id, put_endpoint):
         'tags': ['cat', 'stress', 'vibe'],
         'info': {"colors": "white"}
     }
+    put_endpoint.update_meme_by_id_unauthorised(new_meme_id, body)
+    put_endpoint.check_status_code_is_401()
+
     put_endpoint.update_meme_by_id(new_meme_id, body)
     put_endpoint.check_status_code_is_200()
     put_endpoint.check_data(body['text'], 'text')
@@ -89,12 +105,20 @@ def test_put_meme(new_meme_id, put_endpoint):
     put_endpoint.check_data(body['tags'], 'tags')
     put_endpoint.check_data(body['info'], 'info')
 
+    put_endpoint.update_meme_by_id_not_valid(1, body)
+    put_endpoint.check_status_code_is_403()
 
 @allure.title('Delete meme')
 @allure.feature('Delete memes')
 @allure.story('Delete meme')
 def test_delete_meme(new_meme_id, delete_endpoint):
+    delete_endpoint.delete_meme_unauthorised(new_meme_id)
+    delete_endpoint.check_status_code_is_401()
+
     delete_endpoint.delete_meme(new_meme_id)
     delete_endpoint.check_status_code_is_200()
     delete_endpoint.check_data(new_meme_id)
     delete_endpoint.check_that_meme_is_deleted(new_meme_id)
+
+    delete_endpoint.delete_meme(1)
+    delete_endpoint.check_status_code_is_403()
