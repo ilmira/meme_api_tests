@@ -27,3 +27,11 @@ class Authorize(Endpoint):
     def check_token_is_good(self):
         self.response = requests.get(f'{self.url}/meme', headers=self.headers)
         assert self.response.status_code == 200, f'Status code is {self.response.status_code}, not 200! Token is not good!'
+
+    @allure.step('Get token for authorization: another user')
+    def get_token_another_user(self, name):
+        body = {
+            "name": name
+        }
+        token = requests.post(f'{self.url}/authorize', json=body).json()['token']
+        return {'Authorization': token}

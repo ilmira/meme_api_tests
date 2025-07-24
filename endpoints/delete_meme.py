@@ -1,3 +1,4 @@
+from endpoints.authorize import Authorize
 from endpoints.endpoint import Endpoint
 import allure
 import requests
@@ -20,3 +21,8 @@ class DeleteMeme(Endpoint):
     @allure.step('Delete meme: not valid, unauthorised')
     def delete_meme_unauthorised(self, id):
         self.response = requests.delete(f'{self.url}/meme/{id}')
+
+    @allure.step('Delete meme: by wrong user')
+    def delete_meme_wrong_user(self, id):
+        headers = Authorize.get_token_another_user(Authorize(), 'Another user')
+        self.response = requests.delete(f'{self.url}/meme/{id}', headers=headers)

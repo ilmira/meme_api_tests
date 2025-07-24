@@ -10,6 +10,11 @@ class PostMeme(Endpoint):
         self.json = self.response.json()
         return self.response
 
+    @allure.step('Post meme: wrong data')
+    def post_meme_wrong_data(self, body):
+        self.response = requests.post(f'{self.url}/meme', json=body, headers=self.headers)
+        return self.response
+
     @allure.step('Post meme: not valid, unauthorised')
     def post_meme_unauthorised(self, body):
         self.response = requests.post(f'{self.url}/meme', json=body)
