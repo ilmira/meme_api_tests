@@ -68,7 +68,7 @@ def test_post_meme_wrong_data(post_endpoint):
         'tags': ['cat', 'stress', 'vibe'],
         'info': {"colors": "white"}
     }
-    post_endpoint.post_meme_wrong_data(body)
+    post_endpoint.post_meme(body)
     post_endpoint.check_status_code_is_400()
 
 
@@ -82,7 +82,7 @@ def test_post_meme_wrong_data_without_url(post_endpoint):
         'tags': ['cat', 'stress', 'vibe'],
         'info': {"colors": "white"}
     }
-    post_endpoint.post_meme_wrong_data(body)
+    post_endpoint.post_meme(body)
     post_endpoint.check_status_code_is_400()
 
 
@@ -97,7 +97,7 @@ def test_post_meme_unauthorized(post_endpoint):
         'tags': ['cat', 'stress', 'vibe'],
         'info': {"colors": "white"}
     }
-    post_endpoint.post_meme_unauthorised(body)
+    post_endpoint.post_meme(body, set_headers=False)
     post_endpoint.check_status_code_is_401()
 
 
@@ -108,6 +108,7 @@ def test_post_meme_unauthorized(post_endpoint):
 def test_get_all_memes(get_memes_endpoint):
     get_memes_endpoint.get_memes()
     get_memes_endpoint.check_status_code_is_200()
+    get_memes_endpoint.check_data()
 
 
 @allure.title('Get all memes')
@@ -115,7 +116,7 @@ def test_get_all_memes(get_memes_endpoint):
 @allure.story('Get all memes: unauthorized user')
 @pytest.mark.critical
 def test_get_all_memes_unauthorized(get_memes_endpoint):
-    get_memes_endpoint.get_memes_unauthorised()
+    get_memes_endpoint.get_memes(set_headers=False)
     get_memes_endpoint.check_status_code_is_401()
 
 
@@ -134,7 +135,7 @@ def test_get_meme_by_id(new_meme_id, get_meme_by_id_endpoint):
 @allure.story('Get meme by id')
 @pytest.mark.critical
 def test_get_meme_by_id_unauthorized(new_meme_id, get_meme_by_id_endpoint):
-    get_meme_by_id_endpoint.get_meme_by_id_unauthorised(new_meme_id)
+    get_meme_by_id_endpoint.get_meme_by_id(new_meme_id, set_headers=False)
     get_meme_by_id_endpoint.check_status_code_is_401()
 
 
@@ -152,7 +153,7 @@ def test_get_meme_by_id_wrong_user(new_meme_id, get_meme_by_id_endpoint, authori
 @allure.story('Get meme by id')
 @pytest.mark.critical
 def test_get_meme_by_id_wrong_id(get_meme_by_id_endpoint):
-    get_meme_by_id_endpoint.get_meme_by_id_wrong_id(1000000000000000000000)
+    get_meme_by_id_endpoint.get_meme_by_id(1000000000000000000000)
     get_meme_by_id_endpoint.check_status_code_is_404()
 
 
@@ -190,7 +191,7 @@ def test_put_meme_wrong_data(new_meme_id, put_endpoint):
         'info': "white"
     }
 
-    put_endpoint.update_meme_by_id_wrong_data(new_meme_id, body)
+    put_endpoint.update_meme_by_id(new_meme_id, body)
     put_endpoint.check_status_code_is_400()
 
 
@@ -206,7 +207,7 @@ def test_put_meme_wrong_data_without_id(new_meme_id, put_endpoint):
         'info': {"colors": "white"}
     }
 
-    put_endpoint.update_meme_by_id_wrong_data(new_meme_id, body)
+    put_endpoint.update_meme_by_id(new_meme_id, body)
     put_endpoint.check_status_code_is_400()
 
 
@@ -222,7 +223,7 @@ def test_put_meme_unauthorized(new_meme_id, put_endpoint):
         'tags': ['cat', 'stress', 'vibe'],
         'info': {"colors": "white"}
     }
-    put_endpoint.update_meme_by_id_unauthorised(new_meme_id, body)
+    put_endpoint.update_meme_by_id(new_meme_id, body, set_headers=False)
     put_endpoint.check_status_code_is_401()
 
 
@@ -257,7 +258,7 @@ def test_delete_meme(new_meme_id, delete_endpoint):
 @allure.feature('Delete memes')
 @allure.story('Delete meme')
 def test_delete_meme_unauthorised(new_meme_id, delete_endpoint):
-    delete_endpoint.delete_meme_unauthorised(new_meme_id)
+    delete_endpoint.delete_meme(new_meme_id, set_headers=False)
     delete_endpoint.check_status_code_is_401()
 
 
