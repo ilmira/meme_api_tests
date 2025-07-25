@@ -1,3 +1,5 @@
+from json import JSONDecodeError
+
 from endpoints.authorize import Authorize
 from endpoints.endpoint import Endpoint
 import allure
@@ -14,7 +16,7 @@ class GetMemeById(Endpoint):
             try:
                 self.json = self.response.json()
                 return self.response
-            except Exception:
+            except JSONDecodeError:
                 return self.response
         else:
             self.response = requests.get(f'{self.url}/meme/{id}')

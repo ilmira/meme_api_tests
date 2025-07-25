@@ -1,3 +1,5 @@
+from email.feedparser import headerRE
+
 from endpoints.authorize import Authorize
 from endpoints.endpoint import Endpoint
 import allure
@@ -8,11 +10,10 @@ class DeleteMeme(Endpoint):
     @allure.step('Delete meme')
     def delete_meme(self, id, set_headers=True, headers=None):
         if set_headers:
-            if not headers:
-                headers = self.headers
-            self.response = requests.delete(f'{self.url}/meme/{id}', headers=headers)
+            headers = headers if headers is not None else self.headers
         else:
-            self.response = requests.delete(f'{self.url}/meme/{id}')
+            headers = {}
+        self.response = requests.delete(f'{self.url}/meme/{id}', headers=headers)
 
     @allure.step('Check data')
     def check_data(self, id):
